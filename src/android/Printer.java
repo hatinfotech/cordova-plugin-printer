@@ -21,8 +21,8 @@
 
 package de.appplant.cordova.plugin.printer;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.webkit.WebView;
 
 import org.apache.cordova.CallbackContext;
@@ -88,11 +88,14 @@ public final class Printer extends CordovaPlugin
      */
     private void check (@Nullable String item, CallbackContext callback)
     {
-        cordova.getThreadPool().execute(() -> {
-            PrintManager pm   = new PrintManager(cordova.getContext());
+        cordova.getThreadPool().execute(new Runnable() {
+          @Override
+          public void run() {
+            PrintManager pm = new PrintManager(cordova.getContext());
             boolean printable = pm.canPrintItem(item);
 
-            sendPluginResult(callback, printable);
+            Printer.this.sendPluginResult(callback, printable);
+          }
         });
     }
 
